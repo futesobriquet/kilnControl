@@ -2,3 +2,33 @@
 .vs/Kiln Control/v16/.suo
 .vs/Kiln Control/v16/Browse.VC.db
 *.ipch
+.vs/Kiln Control/v16/Browse.VC.db-shm
+.vs/Kiln Control/v16/Browse.VC.db-wal
+.vs/Kiln Control/v16/Browse.VC.opendb
+Bang Bang Controller/__vm/.Bang Bang Controller.vsarduino.h
+Bang Bang Controller/__vm/Compile.vmps.xml
+Bang Bang Controller/__vm/Configuration.Debug.vmps.xml
+Bang Bang Controller/__vm/Upload.vmps.xml
+Bang Bang Controller/Debug/Bang Bang Controller.cpp.d
+Bang Bang Controller/Debug/Bang Bang Controller.cpp.o
+Bang Bang Controller/Debug/Bang Bang Controller.eep
+Bang Bang Controller/Debug/Bang Bang Controller.elf
+Bang Bang Controller/Debug/Bang Bang Controller.hex
+Bang Bang Controller/Debug/Bang Bang Controller.ino.eep
+Bang Bang Controller/Debug/Bang Bang Controller.ino.elf
+Bang Bang Controller/Debug/Bang Bang Controller.ino.hex
+Bang Bang Controller/Debug/Bang Bang Controller.ino.with_bootloader.hex
+Bang Bang Controller/Debug/Bang Bang Controller.with_bootloader.hex
+Bang Bang Controller/Debug/board.buildinfo
+Bang Bang Controller/Debug/SparkFun_MCP9600_Thermocouple_Library/SparkFun_MCP9600.cpp.d
+Bang Bang Controller/Debug/SparkFun_MCP9600_Thermocouple_Library/SparkFun_MCP9600.cpp.o
+Bang Bang Controller/Debug/VM_DBG/VM_DBG.cpp.d
+Bang Bang Controller/Debug/VM_DBG/VM_DBG.cpp.o
+Bang Bang Controller/Debug/VM_DBG/VM_mem_check_sam.cpp.d
+Bang Bang Controller/Debug/VM_DBG/VM_mem_check_sam.cpp.o
+Bang Bang Controller/Debug/Wire/utility/twi.c.d
+Bang Bang Controller/Debug/Wire/utility/twi.c.o
+Bang Bang Controller/Debug/Wire/Wire.cpp.d
+Bang Bang Controller/Debug/Wire/Wire.cpp.o
+Bang Bang Controller/__vm/.Bang Bang Controller.vsarduino.h
+Bang Bang Controller/__vm/.Bang Bang Controller.vsarduino.h

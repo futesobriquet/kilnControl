@@ -7,15 +7,20 @@
 //double bottomSectionDutyCycle = 50;
 //double timebase = 10/60; //in minutes. dictates the update rate of the entire control algorithm
 
+//includes
+#include <SparkFun_MCP9600.h>
+
 //process variables
 int const segments = 5; //You MUST update segments to match how many segments will be in your profile
-double profile[segments][3] = { {250, 135, 1}, { 1000, 225, 1 }, {1100,60,1},{1570,150,1},{1820,180,1} };
-double highHysteresis = 10;
-double lowHysteresis = 10;
+//double profile[segments][3] = { {250, 135, 1}, { 1000, 225, 1 }, {1100,60,1},{1570,150,1},{1820,180,1} }; //bisque
+double profile[segments][3] = { {250, 1, 1}, { 1000, 2, 1 }, {1100,1,1},{1570,1,1},{1820,1,1} }; //bisque sw test
+double highHysteresis = 5;
+double lowHysteresis = 5;
 
 //hardware variables
-//topHeaterPin
-//bottomHeterPin 
+int topHeaterPin = 13;
+int bottomHeaterPin = 12;
+MCP9600 tempSensor;
 
 
 //code variables
@@ -27,15 +32,31 @@ int index;
 double lastUpdate = 0;
 
 void setup() {
-	// put your setup code here, to run once:
+
+	//Serial
+	Serial.begin(115200);
+	Serial.println("Serial started");
+
+	//Thermocouple
+	Wire.begin();
+	Wire.setClock(100000);
+	tempSensor.begin();
+	if (tempSensor.isConnected()) {
+		Serial.println("Thermocouple connected");
+	}
+
+	//Heaters
+	pinMode(topHeaterPin, OUTPUT);
+	pinMode(bottomHeaterPin, OUTPUT);
+
+	//Process Code
 	startTime = millis();
 	startTemp = readTemp();
 	index = 0;
-	//Serial
-	Serial.begin(9600);
 }
 
 void loop() {
+	delay(20);//delay to avoid overrunning the i2c bus
 	if (index <= segments - 1)
 	{
 		//index profile
@@ -51,7 +72,7 @@ void loop() {
 			if (rampBit == 1)
 			{
 				//if in a ramp segment calculate what setpoint we should be at our current time
-				setpoint = startTemp + (timeElapsed / duration * (endTemp-startTemp));
+				setpoint = startTemp + (timeElapsed / duration * (endTemp - startTemp));
 			}
 			else
 			{
@@ -66,24 +87,50 @@ void loop() {
 			startTime = millis();
 			startTemp = readTemp();
 		}
-		
-		//serial
+
+		//serial update
 		if ((millis() - lastUpdate) >= 10000)
 		{
-			updateSerial(readTemp(), setpoint, timeElapsed, duration);
+			Serial.print("Temperature: ");
+			Serial.print(readTemp());
+			Serial.print("F ");
+			Serial.print("Setpoint: ");
+			Serial.print(setpoint);
+			Serial.print("F ");
+			Serial.print("Ambient: ");
+			Serial.print(readAmbient());
+			Serial.print("F ");
+			Serial.print("Time: ");
+			Serial.print(timeElapsed);
+			Serial.print("min ");
+			Serial.print("Segment end time: ");
+			Serial.print(duration);
+			Serial.print("min ");
+			Serial.print("Segment end temp: ");
+			Serial.print(endTemp);
+			Serial.print("F ");
+			Serial.print("Segments remaining: ");
+			Serial.println(segments-index-1);
+			
 			lastUpdate = millis();
 		}
 	}
-	else 
+	else
 	{
-		Serial.println(readTemp());
+		heatersOff();
+		Serial.print("Profile Finished. Temperature: ");
+		Serial.print(readTemp());
+		Serial.print("F ");
+		Serial.print("Ambient: ");
+		Serial.print(readAmbient());
+		Serial.println("F");
 		delay(100000);
 	}
 }
 
 void updateHeaters(double setpoint, double highHysteresis, double lowHysteresis) {
 	double currentTemp = readTemp();
-	if(currentTemp >= (setpoint + highHysteresis))
+	if (currentTemp >= (setpoint + highHysteresis))
 	{
 		heatersOff();
 	}
@@ -94,27 +141,19 @@ void updateHeaters(double setpoint, double highHysteresis, double lowHysteresis)
 }
 
 double readTemp() {
+	return tempSensor.getThermocoupleTemp(false);
+}
 
+double readAmbient() {
+	return tempSensor.getAmbientTemp(false);
 }
 
 void heatersOn() {
-
+	digitalWrite(topHeaterPin, HIGH);
+	digitalWrite(bottomHeaterPin, HIGH);
 }
 
 void heatersOff() {
-}
-
-void updateSerial(double temperature, double setpoint, double time, double duration) {
-	Serial.print("Temperature: ");
-	Serial.print(temperature);
-	Serial.print("F ");
-	Serial.print("Setpoint: ");
-	Serial.print(setpoint);
-	Serial.print("F ");
-	Serial.print("Time: ");
-	Serial.print(time);
-	Serial.print("min ");
-	Serial.print("End time: ");
-	Serial.print(duration);
-	Serial.println("min ");
+	digitalWrite(topHeaterPin, LOW);
+	digitalWrite(bottomHeaterPin, LOW);
 }
