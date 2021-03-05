@@ -8,7 +8,9 @@
 //double timebase = 10/60; //in minutes. dictates the update rate of the entire control algorithm
 
 //includes
+#include <Wire.h>
 #include <SparkFun_MCP9600.h>
+#include <SparkFun_Alphanumeric_Display.h> //Click here to get the library: http://librarymanager/All#Alphanumeric_Display by SparkFun
 
 //process variables
 int const segments = 5; //You MUST update segments to match how many segments will be in your profile
@@ -21,7 +23,7 @@ double lowHysteresis = 5;
 int topHeaterPin = 13;
 int bottomHeaterPin = 12;
 MCP9600 tempSensor;
-
+HT16K33 display;
 
 //code variables
 double startTime;
@@ -45,6 +47,12 @@ void setup() {
 		Serial.println("Thermocouple connected");
 	}
 
+	//Displays
+	if (display.begin() == true) {
+		Serial.println("Display connected");
+	}
+
+
 	//Heaters
 	pinMode(topHeaterPin, OUTPUT);
 	pinMode(bottomHeaterPin, OUTPUT);
@@ -56,7 +64,13 @@ void setup() {
 }
 
 void loop() {
+	
+	
 	delay(20);//delay to avoid overrunning the i2c bus
+	//display temp
+	int temp = (int) readTemp();
+	display.print(temp);
+
 	if (index <= segments - 1)
 	{
 		//index profile
@@ -124,7 +138,7 @@ void loop() {
 		Serial.print("Ambient: ");
 		Serial.print(readAmbient());
 		Serial.println("F");
-		delay(100000);
+		delay(10000);
 	}
 }
 
