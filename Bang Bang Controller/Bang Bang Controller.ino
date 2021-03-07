@@ -14,13 +14,12 @@
 
 //process variables
 int const segments = 5; //You MUST update segments to match how many segments will be in your profile
-//double profile[segments][3] = { {250, 135, 1}, { 1000, 225, 1 }, {1100,60,1},{1570,150,1},{1820,180,1} }; //bisque
-double profile[segments][3] = { {250, 1, 1}, { 1000, 2, 1 }, {1100,1,1},{1570,1,1},{1820,1,1} }; //bisque sw test
+double profile[segments][3] = { {250, 135, 1}, { 1000, 225, 1 }, {1100,60,1},{1570,150,1},{1820,180,1} }; //bisque
 double highHysteresis = 5;
 double lowHysteresis = 5;
 
 //hardware variables
-int topHeaterPin = 13;
+int topHeaterPin = 8;
 int bottomHeaterPin = 12;
 MCP9600 tempSensor;
 HT16K33 display;
@@ -43,8 +42,17 @@ void setup() {
 	Wire.begin();
 	Wire.setClock(100000);
 	tempSensor.begin();
+	Thermocouple_Type tcType = TYPE_K;
+	tempSensor.setThermocoupleType(tcType);
 	if (tempSensor.isConnected()) {
-		Serial.println("Thermocouple connected");
+		Serial.print("Thermocouple connected. Type:");
+		if (tempSensor.getThermocoupleType() == tcType)
+		{
+			Serial.println("K");
+		}
+		else {
+			Serial.println("UNKNOWN");
+		}
 	}
 
 	//Displays
